@@ -1,0 +1,85 @@
+<h1>Welcome <%= user.username %></h1>
+
+
+<% let all_tasks = tasks.slice() %>
+<% tasks = all_tasks.filter(e => e.status===false) %>
+<% let tasks_done = all_tasks.filter(e => e.status===true) %>
+
+
+<div class="add-task">
+    <h2>Add new task</h2>
+    <form action="add-task" method="post">
+        <label>Type your task: <input type="text" name="task" required></label>
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+<div class="list-task">
+    <h2>List task</h2>
+    <h3>Pending tasks</h3>
+    <table>
+        <tr>
+          <th>Stt</th>
+          <th>Content</th>
+          <th>Create at</th>
+          <th>Action</th>
+          <th>Status</th>
+        </tr>
+        <% for (let i = 0; i < tasks.length; i++){ %>
+            <tr>
+                <td><%= i+1 %></td>
+                <td><%= tasks[i].content %></td>
+                <td><%=  tasks[i].createdAt.toUTCString() %></td>
+                <td>
+                    <a href="/user/edit-task/<%= tasks[i]._id %>">Edit</a>
+                    <form action="/user/delete-task" method="post">
+                        <input type="hidden" name="taskId" value="<%= tasks[i]._id %>" required>
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form action="/user/done-task" method="post">
+                        <input type="hidden" name="taskId" value="<%= tasks[i]._id %>" required>
+                        <button type="submit">Done</button>
+                    </form>
+                </td>
+                <td><%= tasks[i].status %></td>
+            </tr>            
+        <% } %>
+
+    </table>
+
+    <h3>Done tasks</h3>
+    <table>
+        <tr>
+          <th>Stt</th>
+          <th>Content</th>
+          <th>Create at</th>
+          <th>Action</th>
+          <th>Status</th>
+        </tr>
+        <% for (let i = 0; i < tasks_done.length; i++){ %>
+            <tr>
+                <td><%= i+1 %></td>
+                <td><del><%= tasks_done[i].content %></del></td>
+                <td><%=  tasks_done[i].createdAt.toUTCString() %></td>
+                <td>
+                    <a href="/user/edit-task/<%= tasks_done[i]._id %>">Edit</a>
+                    <form action="/user/delete-task" method="post">
+                        <input type="hidden" name="taskId" value="<%= tasks_done[i]._id %>" required>
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form action="/user/pending-task" method="post">
+                        <input type="hidden" name="taskId" value="<%= tasks_done[i]._id %>" required>
+                        <button type="submit">Pending</button>
+                    </form>
+                </td>
+                <td><%= tasks_done[i].status %></td>
+            </tr>            
+        <% } %>
+
+      </table>  
+</div>
+
+
+<form action="logout" method="post">
+    <button type="submit">Logout</button>
+</form>
